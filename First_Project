@@ -1,0 +1,86 @@
+'''
+Eduonix Python for Data Science Project
+
+Guess the number
+
+Requirements:
+
+1) Ask the user for number of games to play
+2) Select a random number between 1 and 25
+3) Print if number is higher or lower
+4) Iterate number of games and numbers picked
+5) If user guesses, tell how many guesses were required
+
+'''
+
+import random
+
+class NumberGuessManager:
+
+    random_Number_Generated = 0
+    random_Number_Range_End = 0
+    num_Of_Games = 0
+    continue_Play = True
+
+    def __init__(self, number_Range_End):   
+        self.random_Number_Range_End = number_Range_End
+        self.startGames()
+
+    def generateRandonNumber(self):
+         self.random_Number_Generated = int(random.random() * self.random_Number_Range_End) + 1
+         
+
+
+    def startGames(self):
+        while self.continue_Play:
+            try:        
+              self. num_Of_Games = int(input("How many games do you want to play? Enter 0 to exit "))
+              if self. num_Of_Games < 0:
+                  raise ValueError("Invalid value entered. Please try again")              
+              elif self.num_Of_Games == 0:
+                  self.continue_Play = False
+              else:
+                  self.playGame()
+            except ValueError as errorMessage:
+              print(errorMessage)
+              continue
+       
+    def playGame(self):
+       
+        user_Guess = ""
+        number_Of_Guesses = 1
+        
+        while self.num_Of_Games > 0:
+            print("Starting new game")
+            self.generateRandonNumber()
+            number_Guessed = False
+            while(not number_Guessed):        
+             user_Guess = input("Please select a number between 1 and {} ".format(self.random_Number_Range_End))             
+             if (user_Guess.isdigit()):
+               user_Guess = int(user_Guess)
+               if user_Guess < 1 or user_Guess >  self.random_Number_Range_End:
+                 print("Number not in range. Please try again.")
+                 # include bad guesses in the number of guesses
+                 number_Of_Guesses += 1
+                 continue               
+             else:
+                print("Invalid input. Please try again.")
+                number_Of_Guesses += 1
+                continue
+                
+          #We are good...start guessing
+             if user_Guess == self.random_Number_Generated:
+                if number_Of_Guesses == 1:
+                     print("Good job. You got it. It only took you 1 guess.")
+                else:     
+                     print("Good job. You got it. It only took you {} guesses.".format(number_Of_Guesses)) 
+                number_Guessed = True
+                number_Of_Guesses = 1
+                self.num_Of_Games -= 1
+             else:
+                print("Your guess was {} than the secret number. Try again".format("higher" if user_Guess > self.random_Number_Generated else "lower"))
+                number_Of_Guesses += 1
+
+        self.continue_Play = False
+
+ready_player_one = NumberGuessManager(25)
